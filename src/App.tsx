@@ -45,11 +45,11 @@ function App() {
         options.map((option) => {
           return <button onClick={() => {
             handleOptionSelection(option)
-          }} style={{backgroundColor: option === currentColor ? 'green' : undefined}}>{option}</button>
+          }}>{option.toUpperCase()}</button>
         })
       }  
       </div>
-      <span>{isCorrect}</span>
+      <span style={{color: isCorrect === Results.Correct ? 'green' : 'red'}}>{isCorrect}</span>
     </div>
   )
 }

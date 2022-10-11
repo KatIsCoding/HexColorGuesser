@@ -2,10 +2,12 @@ body {
   display: flex;
   justify-content: center;
   align-content: center;
+  text-align: center;
 }
 
 #colorBox {
-  width: 350px;
+  width: 360px;
   height: 200px;
 }
+
 
