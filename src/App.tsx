@@ -1,32 +1,55 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
+import { useEffect, useState } from 'react'
 import './App.css'
 
+
+const randomColorGen = () => {
+  const random = Math.floor(Math.random() * ((255*255*255) - 1 ) + 1)
+  return '#' + random.toString(16)
+}
+
+
+enum Results {
+  Correct = 'Correct', Incorrect = 'Incorrect'
+}
+
 function App() {
-  const [count, setCount] = useState(0)
+  const [currentColor, setCurrentColor] = useState('');
+  const [options, setOptions] = useState<string[]>([])
+  const [isCorrect, setResult] = useState<Results | undefined>()
+
+  const colorSetterFunction = () => {
+    const actualColor = randomColorGen()
+    const options = [actualColor, randomColorGen(), randomColorGen()]
+    setCurrentColor(actualColor)
+    setOptions(options.sort(() => 0.5 - Math.random() ))
+  }
+
+  const handleOptionSelection = (option: string) => {
+    if (option === currentColor) {
+      setResult(Results.Correct)
+      colorSetterFunction()
+    } else {
+      setResult(Results.Incorrect)
+    }
+  }
+
+  useEffect(() => {
+    colorSetterFunction()
+  }, [])
 
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div id='colorBox' style={{background: currentColor, border: '1px'}}/>
+      <div id='optionsContainer'>
+      {
+        options.map((option) => {
+          return <button onClick={() => {
+            handleOptionSelection(option)
+          }} style={{backgroundColor: option === currentColor ? 'green' : undefined}}>{option}</button>
+        })
+      }  
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <span>{isCorrect}</span>
     </div>
   )
 }
